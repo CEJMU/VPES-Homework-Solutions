@@ -6,30 +6,31 @@
 class placeInterface : public virtual sc_core::sc_interface
 {
 public:
-    virtual void addTokens(unsigned int n) = 0;
-    virtual void removeTokens(unsigned int n) = 0;
-    virtual unsigned int testTokens() = 0;
+    virtual void addTokens() = 0;
+    virtual void removeTokens() = 0;
+    virtual bool testTokens() = 0;
 };
 
 // Place Channel:
+template<unsigned int Win = 1, unsigned int Wout = 1>
 class place : public placeInterface
 {
 public:
     place(unsigned int tokens) : tokens(tokens) {}
 
-    virtual void addTokens(unsigned int n) override
+    void addTokens() override
     {
-        tokens += n;
+        tokens += Win;
     }
 
-    virtual void removeTokens(unsigned int n) override
+    void removeTokens() override
     {
-        tokens -= n;
+        tokens -= Wout;
     }
 
-    virtual unsigned int testTokens() override
+    bool testTokens() override
     {
-        return tokens;
+        return tokens >= Wout;
     }
 
 private:
