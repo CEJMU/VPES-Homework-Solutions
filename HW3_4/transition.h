@@ -5,7 +5,7 @@
 #include "place.h"
 
 // Transition:
-template<unsigned int N = 1, unsigned int M = 1>
+template<unsigned int N = 1, unsigned int M = 1, unsigned int L = 0>
 SC_MODULE(transition)
 {
 public:
@@ -13,10 +13,12 @@ public:
 
     sc_core::sc_port<placeInterface, N, sc_core::SC_ALL_BOUND> in;
     sc_core::sc_port<placeInterface, M, sc_core::SC_ALL_BOUND> out;
+    sc_core::sc_port<placeInterface, L, sc_core::SC_ZERO_OR_MORE_BOUND> inhibitors;
 
     void fire()
     {
         bool enoughTokens = true;
+        bool noInhibitance = true;
 
         for (unsigned int i = 0; i < N; i++)
         {
@@ -28,6 +30,18 @@ public:
         }
 
         if (enoughTokens)
+        {
+            for (unsigned int i = 0; i < L; i++)
+            {
+                if (inhibitors[i]->testTokens())
+                {
+                    noInhibitance = false;
+                    break;
+                }
+            }
+        }
+
+        if (enoughTokens && noInhibitance)
         {
             std::cout << this->name() << ": Fired\n";
 
