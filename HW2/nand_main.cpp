@@ -7,7 +7,7 @@ using namespace sc_core;
 SC_MODULE(toplevel)
 {
 public:
-    SC_CTOR(toplevel) : n1("n1"), cnt(0)
+    SC_CTOR(toplevel) : n1("n1")
     {
         n1.A.bind(A);
         n1.B.bind(B);
@@ -19,7 +19,7 @@ public:
 
 private:
     nand n1;
-    unsigned int cnt;
+    unsigned int cnt = 0;
 
     sc_signal<bool> A;
     sc_signal<bool> B;
@@ -94,7 +94,7 @@ private:
         // B.write(true);
 
         // Print a new line
-        std::cout << std::endl;
+        std::cout << '\n';
     }
 };
 
