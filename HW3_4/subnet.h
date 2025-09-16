@@ -1,9 +1,9 @@
 #pragma once
 
+#include <systemc>
+
 #include "place.h"
 #include "transition.h"
-
-#include <systemc>
 
 // Subnet:
 // TODO

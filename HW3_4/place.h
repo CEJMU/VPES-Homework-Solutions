@@ -17,17 +17,17 @@ class place : public placeInterface
 public:
     place(unsigned int tokens) : tokens(tokens) {}
 
-    void addTokens(unsigned int n) override
+    virtual void addTokens(unsigned int n) override
     {
         tokens += n;
     }
 
-    void removeTokens(unsigned int n) override
+    virtual void removeTokens(unsigned int n) override
     {
         tokens -= n;
     }
 
-    unsigned int testTokens() override
+    virtual unsigned int testTokens() override
     {
         return tokens;
     }
