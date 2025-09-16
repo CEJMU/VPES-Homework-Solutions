@@ -1,6 +1,6 @@
 #pragma once
 
-#include <systemc.h>
+#include <systemc>
 
 #include "place.h"
 #include "transition.h"
