@@ -38,13 +38,14 @@
 
 using namespace std;
 
-MemoryManager::MemoryManager(): numberOfAllocations(0), numberOfFrees(0)
+MemoryManager::MemoryManager() : numberOfAllocations(0), numberOfFrees(0)
 {
 }
 
 MemoryManager::~MemoryManager()
 {
-    for (tlm::tlm_generic_payload* payload: freePayloads) {
+    for (tlm::tlm_generic_payload* payload : freePayloads)
+    {
         delete payload;
         numberOfFrees++;
     }
@@ -52,18 +53,19 @@ MemoryManager::~MemoryManager()
 
 tlm::tlm_generic_payload* MemoryManager::allocate()
 {
-    if (freePayloads.empty()) {
+    if (freePayloads.empty())
+    {
         numberOfAllocations++;
         return new tlm::tlm_generic_payload(this);
-    } else {
-        tlm::tlm_generic_payload* result = freePayloads.back();
-        freePayloads.pop_back();
-        return result;
     }
+    
+    tlm::tlm_generic_payload* result = freePayloads.back();
+    freePayloads.pop_back();
+    return result;
 }
 
 void MemoryManager::free(tlm::tlm_generic_payload* payload)
 {
-    payload->reset(); //clears all extensions
+    payload->reset(); // clears all extensions
     freePayloads.push_back(payload);
 }

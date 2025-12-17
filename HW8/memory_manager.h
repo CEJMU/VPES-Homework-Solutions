@@ -46,7 +46,7 @@ public:
     MemoryManager();
     virtual ~MemoryManager();
     virtual tlm::tlm_generic_payload* allocate();
-    virtual void free(tlm::tlm_generic_payload* payload);
+    void free(tlm::tlm_generic_payload* payload) override;
 
 private:
     unsigned int numberOfAllocations;
