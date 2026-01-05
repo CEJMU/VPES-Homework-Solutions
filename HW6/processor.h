@@ -4,12 +4,15 @@
 
 #include <systemc>
 #include <tlm>
+#include <tlm_utils/tlm_quantumkeeper.h>
 
 class processor : public sc_core::sc_module, tlm::tlm_bw_transport_if<>
 {
 private:
     std::ifstream file;
     sc_core::sc_time cycleTime;
+
+    tlm_utils::tlm_quantumkeeper quantumKeeper;
 
     // Method:
     void processTrace();

@@ -9,11 +9,14 @@ processor::processor(sc_core::sc_module_name, std::string pathToFile, sc_core::s
     file(pathToFile),
     cycleTime(cycleTime)
 {
-    if (!file.is_open())
-        SC_REPORT_FATAL(name(), "Could not open trace");
+    // if (!file.is_open())
+    //     SC_REPORT_FATAL(name(), "Could not open trace");
 
-    SC_THREAD(processTrace);
-    // SC_THREAD(processRandom);
+    // SC_THREAD(processTrace);
+    SC_THREAD(processRandom);
+
+    tlm_utils::tlm_quantumkeeper::set_global_quantum(sc_core::sc_time(100000, sc_core::SC_NS));
+    quantumKeeper.reset();
 
     iSocket.bind(*this);
 }
@@ -108,7 +111,7 @@ void processor::processRandom()
     data[1] = 0;
     data[2] = 0;
     data[3] = 0;
-    
+
     trans.set_data_length(4);
     trans.set_command(tlm::TLM_WRITE_COMMAND);
     trans.set_data_ptr(data);
@@ -118,12 +121,16 @@ void processor::processRandom()
         cycles = distrCycle(randGenerator);
         address = distrAddr(randGenerator);
 
-        sc_core::sc_time delay = cycles * cycleTime;
-
+        sc_core::sc_time delay = quantumKeeper.get_local_time();
+        if (quantumKeeper.get_current_time() <= cycles * cycleTime)
+        {
+            delay += cycles * cycleTime - quantumKeeper.get_current_time();
+        }
         trans.set_address(address);
         iSocket->b_transport(trans, delay);
-
-        wait(delay);
+        quantumKeeper.set(delay);
+        if (quantumKeeper.need_sync())
+            quantumKeeper.sync();
     }
 
     // End Simulation because there are no events.
